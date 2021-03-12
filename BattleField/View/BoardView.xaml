@@ -1,0 +1,149 @@
+﻿<UserControl x:Class="BattleField.View.BoardView"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:BattleField.View"
+      mc:Ignorable="d" 
+      d:DesignHeight="300" d:DesignWidth="300"
+      xmlns:viewModel="clr-namespace:BattleField.ViewModel"
+      Background="#FF1B7E1B"       
+      >
+    <UserControl.DataContext>
+        <viewModel:BoardViewModel x:Name="ViewModel"/>
+    </UserControl.DataContext>
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <Storyboard x:Name="FlipOpen" x:Key="FlipOpen">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Width">
+                <EasingDoubleKeyFrame KeyTime="0:0:0" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:2" Value="90"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Width">
+                <EasingDoubleKeyFrame KeyTime="0:0:2" Value="90"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:4" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+        <!--<Storyboard x:Name="FlipOpen">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.RotationY)" Storyboard.TargetName="ImageCover">
+                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="90"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.RotationY)" Storyboard.TargetName="ImageCard">
+                <EasingDoubleKeyFrame KeyTime="0:0:0.2" Value="-90"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.4" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Name="FlipClose">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.RotationY)" Storyboard.TargetName="ImageCover">
+                <SplineDoubleKeyFrame KeyTime="0:0:0.2" Value="90"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:0.4" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Projection).(PlaneProjection.RotationY)" Storyboard.TargetName="ImageCard">
+                <SplineDoubleKeyFrame KeyTime="0:0:0.2" Value="-90"/>
+                <SplineDoubleKeyFrame KeyTime="0:0:0.4" Value="-90"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>-->
+    </UserControl.Resources>
+    <Grid SourceUpdated="Grid_SourceUpdated">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Column="2" Grid.ColumnSpan="3" Grid.Row="2" Margin="0,5" Background="Gray" Visibility="{Binding OrdersVisible,Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="button2" Content="Order" Command="{Binding ContinueCommand}" HorizontalAlignment="Center" Margin="0" VerticalAlignment="Center" MinWidth="35" Grid.Column="1"/>
+            <Button x:Name="image666" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Command="{Binding OrderAttackCommand}" Grid.Column="0">
+                <Button.Resources>
+                    <Storyboard x:Key="Rock1" Storyboard.Target="{Binding ElementName=image666}">
+                        <DoubleAnimation Storyboard.TargetProperty="Opacity" From="1.0" To="0.0" Duration="0:0:1" AutoReverse="True" RepeatBehavior="Forever"/>
+                    </Storyboard>
+                </Button.Resources>
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Style.Triggers >
+                            <DataTrigger Binding="{Binding Order}" Value="1">
+                                <DataTrigger.EnterActions>
+                                    <BeginStoryboard Storyboard="{StaticResource Rock1}" x:Name="AttackStoryBoard"/>
+                                </DataTrigger.EnterActions>
+                                <DataTrigger.ExitActions>
+                                    <StopStoryboard BeginStoryboardName="AttackStoryBoard"/>
+                                </DataTrigger.ExitActions>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+                <Image Source ="/BattleField;component/Images/Attack.png"/>
+            </Button>
+            <Button x:Name="image222" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Command="{Binding OrderDefendCommand}" Grid.Column="2">
+                <Button.Resources>
+                    <Storyboard x:Key="Rock2" Storyboard.Target="{Binding ElementName=image222}">
+                        <DoubleAnimation Storyboard.TargetProperty="Opacity" From="1.0" To="0.0" Duration="0:0:1" AutoReverse="True" RepeatBehavior="Forever"/>
+                    </Storyboard>
+                </Button.Resources>
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Style.Triggers >
+                            <DataTrigger Binding="{Binding Order}" Value="-1">
+                                <DataTrigger.EnterActions>
+                                    <BeginStoryboard Storyboard="{StaticResource Rock2}" x:Name="DefendStoryBoard"/>
+                                </DataTrigger.EnterActions>
+                                <DataTrigger.ExitActions>
+                                    <StopStoryboard BeginStoryboardName="DefendStoryBoard"/>
+                                </DataTrigger.ExitActions>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+                <Image Source="/BattleField;component/Images/Defend.png"/>
+            </Button>
+        </Grid>
+
+        <Image x:Name="oppimage1" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Stretch"   Margin="5,5,5,5"  VerticalAlignment="Stretch" Source="{Binding OpponentBattlefield[5].Source}" />
+        <Image x:Name="oppimage2" Grid.Row="0" Grid.Column="3" HorizontalAlignment="Stretch"   Margin="5,5,5,5"  VerticalAlignment="Stretch" Source="{Binding OpponentBattlefield[4].Source}" />
+        <Image x:Name="oppimage3" Grid.Row="0" Grid.Column="4"  HorizontalAlignment="Stretch"   Margin="5,5,5,5"  VerticalAlignment="Stretch" Source="{Binding OpponentBattlefield[3].Source}" />
+
+        <Image x:Name="oppimage4" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Stretch"   Margin="5,5,5,5"  VerticalAlignment="Stretch" Source="{Binding OpponentBattlefield[2].Source}" />
+        <Image x:Name="oppimage5" Grid.Row="1" Grid.Column="3" HorizontalAlignment="Stretch"   Margin="5,5,5,5"  VerticalAlignment="Stretch" Source="{Binding OpponentBattlefield[1].Source}" />
+        <Image x:Name="oppimage6" Grid.Row="1" Grid.Column="4" HorizontalAlignment="Stretch"   Margin="5,5,5,5"  VerticalAlignment="Stretch" Source="{Binding OpponentBattlefield[0].Source}" />
+
+        <Image x:Name="image1" Grid.Row="4" Grid.Column="2" HorizontalAlignment="Stretch"   Margin="5,5,5,5"  VerticalAlignment="Stretch" Source="{Binding BattlefieldLayout[3].Source}" RenderTransformOrigin="0.5,0.5" />
+        <!--<local:FlipImage x:Name="TestFlip" Grid.Row="4" Grid.Column="2" HorizontalAlignment="Stretch"   Margin="5,5,5,5"  VerticalAlignment="Stretch" FrontImage="{Binding BattlefieldLayout[3].Source}" />-->
+        <Image x:Name="image2" Grid.Row="4" Grid.Column="3" HorizontalAlignment="Stretch"   Margin="5,5,5,5"  VerticalAlignment="Stretch" Source="{Binding BattlefieldLayout[4].Source}" />
+        <Image x:Name="image3" Grid.Row="4" Grid.Column="4"  HorizontalAlignment="Stretch"   Margin="5,5,5,5"  VerticalAlignment="Stretch" Source="{Binding BattlefieldLayout[5].Source}" />
+
+        <Image x:Name="image4" Grid.Row="3" Grid.Column="2" HorizontalAlignment="Stretch"   Margin="5,5,5,5"  VerticalAlignment="Stretch" Source="{Binding BattlefieldLayout[0].Source}" />
+        <Image x:Name="image5" Grid.Row="3" Grid.Column="3" HorizontalAlignment="Stretch"   Margin="5,5,5,5"  VerticalAlignment="Stretch" Source="{Binding BattlefieldLayout[1].Source}" />
+        <Image x:Name="image6" Grid.Row="3" Grid.Column="4" HorizontalAlignment="Stretch"   Margin="5,5,5,5"  VerticalAlignment="Stretch" Source="{Binding BattlefieldLayout[2].Source}" />
+
+        <Image x:Name="oppDeck" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch"   Margin="5,5,5,5"  VerticalAlignment="Stretch" Source="/BattleField;component/Images/back.png" />
+        <Image x:Name="Deck" Grid.Row="3" Grid.Column="0" HorizontalAlignment="Stretch"   Margin="5,5,5,5"  VerticalAlignment="Stretch" Source="/BattleField;component/Images/back.png" />
+        <TextBox Grid.Row="3" Grid.Column="0" HorizontalAlignment="Center"   Margin="5,5,5,5"  VerticalAlignment="Center" Text="{Binding DeckCount, Mode=OneWay}" Background="{x:Null}" Foreground="Red" FontSize="24" FontWeight="Bold" BorderBrush="{x:Null}" IsReadOnly="True"/>
+        <TextBox Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center"   Margin="5,5,5,5"  VerticalAlignment="Center" Text="{Binding OpponentDeckCount, Mode=OneWay}" Background="{x:Null}" Foreground="Red" FontSize="24" FontWeight="Bold" BorderBrush="{x:Null}" IsReadOnly="True"/>
+
+        <Image x:Name="Casualties" Grid.Row="2" Grid.Column="6" HorizontalAlignment="Stretch"   Margin="5,5,5,5"  VerticalAlignment="Stretch" Source="{Binding CasualtyCard}" />
+        <TextBox Name="txtLog" Text="{Binding Log}" Grid.Row="3" Grid.RowSpan="2" Grid.Column="5" Grid.ColumnSpan="2" Margin="0" Background="White" ScrollViewer.CanContentScroll="True" FontSize="8" VerticalScrollBarVisibility="Auto" TextChanged="TextBox_TextChanged" TextWrapping="Wrap">
+
+        </TextBox>
+
+        <Image Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch"   Margin="5,5,5,5"  VerticalAlignment="Stretch" Source="{Binding OpponentReinforcement.Source}" />
+        <Image Grid.Row="3" Grid.Column="1" HorizontalAlignment="Stretch"   Margin="5,5,5,5"  VerticalAlignment="Stretch" Source="{Binding Reinforcement.Source}" />
+    </Grid>
+</UserControl>
